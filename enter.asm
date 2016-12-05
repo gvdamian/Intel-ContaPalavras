@@ -8,13 +8,13 @@ BS        EQU    08H ; backspace
 dados     segment
 
 
-pal_1 db 0
-pal_2 db 0
-pal_3 db 0
-pal_4 db 0
-pal_5 db 0
-pal_6 db 0
-pal_7 db 0
+pal_1 dw 0
+pal_2 dw 0
+pal_3 dw 0
+pal_4 dw 0
+pal_5 dw 0
+pal_6 dw 0
+pal_7 dw 0
 
 nome_arq   db 64 dup (?)
 buffer     db 128 dup (?)
@@ -26,16 +26,9 @@ minusculas dw 0
 enters     dw 0
 outros     dw 0
 digitos    dw 0
+contador   dw 0
 
-string_1    db '1','$'
-string_2    db '2','$'
-string_3    db '3','$'
-string_4    db '4','$'
-string_5    db '5','$'
-string_6    db '6','$'
-string_7    db '+','$'
 string_mais db '*','$'
-
 
 msg_pede_nome       db 'Nome do arquivo: ','$'
 msg_erro            db 'Erro! Repita.',CR,LF,'$'
@@ -53,8 +46,8 @@ analise_minusculas  db '     minusculas,'
 analise_digitos     db '     digitos,'
 analise_crlfs       db '     CRLF(s) e'
 analise_outros      db '     outros.','$'
-
 analise_fim         db 'Histograma com tamanho das palavras (representa no maximo 75 de cada tamanho)',CR,LF,'$'
+
 num_1 db ' 1 |',CR,LF,'$'
 num_2 db ' 2 |',CR,LF,'$'
 num_3 db ' 3 |',CR,LF,'$'
@@ -234,7 +227,7 @@ formatando_tela:
         int    10h
         jmp    laco
 
-pula_pra_mostra_estatisticas: ;jne dentro do laco nao alcancou
+ pula_pra_mostra_estatisticas: ;jne dentro do laco nao alcancou
         jmp    mostra_estatisticas
 
 laco:
@@ -255,7 +248,7 @@ laco:
         je  conta_espacos
 
         cmp al,CR
-        je  conta_CR
+        je  pula_pra_conta_CR
 
         cmp al,LF
         je  arruma_lf
@@ -264,26 +257,21 @@ laco:
         jg nao_e_digito
 
         cmp al,'0'
-        je  conta_digitos
-        cmp al,'1'
-        je  conta_digitos
-        cmp al,'2'
-        je  conta_digitos
-        cmp al,'3'
-        je  conta_digitos
-        cmp al,'4'
-        je  conta_digitos
-        cmp al,'5'
-        je  conta_digitos
-        cmp al,'6'
-        je  conta_digitos
-        cmp al,'7'
-        je  conta_digitos
-        cmp al,'8'
-        je  conta_digitos
-        cmp al,'9'
-        je  conta_digitos
+        jge  veremos_se_e_digito_mesmo
         jmp conta_outros
+
+veremos_se_e_digito_mesmo:
+        cmp al,'9'
+        jle  conta_digitos
+        jmp conta_outros
+
+pula_pra_conta_CR:
+        jmp conta_CR
+
+conta_digitos:
+        inc contador
+        inc digitos
+        jmp escrever
 
 nao_e_digito:
         cmp al,'Z'
@@ -304,30 +292,127 @@ arruma_lf:
         mov buffer,' '
         jmp escrever
 
+conta_minusculas:
+        inc contador
+        inc minusculas
+        jmp escrever
+
 conta_espacos:
         inc espacos
         inc palavras
+
+        cmp contador,0
+        jne continua_testando_contador
         jmp escrever
+
+        continua_testando_contador:
+
+        cmp contador,1
+        je  aumenta_palavra_1
+        cmp contador,2
+        je  aumenta_palavra_2
+        cmp contador,3
+        je  aumenta_palavra_3
+        cmp contador,4
+        je  aumenta_palavra_4
+        cmp contador,5
+        je  aumenta_palavra_5
+        cmp contador,6
+        je  aumenta_palavra_6
+
+        jmp aumenta_palavra_7
+
+        aumenta_palavra_1:
+                inc pal_1
+                mov contador,0
+                jmp escrever
+        aumenta_palavra_2:
+                inc pal_2
+                mov contador,0
+                jmp escrever
+        aumenta_palavra_3:
+                inc pal_3
+                mov contador,0
+                jmp escrever
+        aumenta_palavra_4:
+                inc pal_4
+                mov contador,0
+                jmp escrever
+        aumenta_palavra_5:
+                inc pal_5
+                mov contador,0
+                jmp escrever
+        aumenta_palavra_6:
+                inc pal_6
+                mov contador,0
+                jmp escrever
+        aumenta_palavra_7:
+                inc pal_7
+                mov contador,0
+                jmp escrever
 
 conta_CR:
         inc enters
         inc palavras
+
+        cmp contador,0
+        jne continua_testando
         jmp laco
 
+        continua_testando:
+
+        cmp contador,1
+        je  incrementa_palavra_1
+        cmp contador,2
+        je  incrementa_palavra_2
+        cmp contador,3
+        je  incrementa_palavra_3
+        cmp contador,4
+        je  incrementa_palavra_4
+        cmp contador,5
+        je  incrementa_palavra_5
+        cmp contador,6
+        je  incrementa_palavra_6
+
+        jmp incrementa_palavra_7
+
+        incrementa_palavra_1:
+                inc pal_1
+                mov contador,0
+                jmp laco
+        incrementa_palavra_2:
+                inc pal_2
+                mov contador,0
+                jmp laco
+        incrementa_palavra_3:
+                inc pal_3
+                mov contador,0
+                jmp laco
+        incrementa_palavra_4:
+                inc pal_4
+                mov contador,0
+                jmp laco
+        incrementa_palavra_5:
+                inc pal_5
+                mov contador,0
+                jmp laco
+        incrementa_palavra_6:
+                inc pal_6
+                mov contador,0
+                jmp laco
+        incrementa_palavra_7:
+                inc pal_7
+                mov contador,0
+                jmp laco
+
 conta_maiusculas:
+        inc contador
         inc maiusculas
         jmp escrever
 
-conta_minusculas:
-        inc minusculas
-        jmp escrever
-
 conta_outros:
+        inc contador
         inc outros
-        jmp escrever
-
-conta_digitos:
-        inc digitos
         jmp escrever
 
 escrever:
@@ -401,6 +486,241 @@ mostra_estatisticas:
         mov    ah,9
         int    21h
 
+mostra_historiograma:
+        cmp pal_1, 75
+        jle so_imprime_pal_1
+
+        mov pal_1, 74
+
+        ;posiciona_cursor (18,79):
+        mov     dh,18
+        mov     dl,79
+        mov     bh,0
+        mov     ah,2
+        int     10h
+        ;escreve_mensagem
+        lea    dx, string_mais
+        mov    ah,9
+        int    21h
+
+ so_imprime_pal_1:
+    ;posiciona_cursor (18,5):
+        mov     dh,18
+        mov     dl,5
+        mov     bh,0
+        mov     ah,2
+        int     10h
+
+        mov ah,9                  ;nessa funçao vai imprimir na tela
+        mov cx,10
+        mov bl,30H
+        mov al,'1'                ;esse caractere pal_1 vezes
+        mov bh,0
+        int 10H
+
+;agora imprime pal_2
+        cmp pal_2, 75
+        jle so_imprime_pal_2
+
+        mov pal_2, 74
+
+        ;posiciona_cursor (19,79):
+        mov     dh,19
+        mov     dl,79
+        mov     bh,0
+        mov     ah,2
+        int     10h
+        ;escreve_mensagem
+        lea    dx, string_mais
+        mov    ah,9
+        int    21h
+
+        so_imprime_pal_2:
+        ;posiciona_cursor (19,5):
+        mov     dh,19
+        mov     dl,5
+        mov     bh,0
+        mov     ah,2
+        int     10h
+
+        mov ah,9                  ;nessa funçao vai imprimir na tela
+        mov cx,pal_2
+        mov bl,30H
+        mov al,'2'                ;esse caractere pal_1 vezes
+        mov bh,0
+        int 10H
+
+;agora escreve pal_3
+        cmp pal_3, 75
+        jle so_imprime_pal_3
+
+        mov pal_3, 74
+
+        ;posiciona_cursor (20,79):
+        mov     dh,20
+        mov     dl,79
+        mov     bh,0
+        mov     ah,2
+        int     10h
+        ;escreve_mensagem
+        lea    dx, string_mais
+        mov    ah,9
+        int    21h
+
+        jmp so_imprime_pal_3
+
+        so_imprime_pal_3:
+        ;posiciona_cursor (20,5):
+        mov     dh,20
+        mov     dl,5
+        mov     bh,0
+        mov     ah,2
+        int     10h
+
+        mov ah,9                  ;nessa funçao vai imprimir na tela
+        mov cx,pal_3
+        mov bl,30H
+        mov al,'3'                ;esse caractere pal_1 vezes
+        mov bh,0
+        int 10H
+
+;agora escreve pal_4
+        cmp pal_4, 75
+        jle so_imprime_pal_4
+
+        mov pal_4, 74
+
+        ;posiciona_cursor (21,79):
+        mov     dh,21
+        mov     dl,79
+        mov     bh,0
+        mov     ah,2
+        int     10h
+        ;escreve_mensagem
+        lea    dx, string_mais
+        mov    ah,9
+        int    21h
+
+        jmp so_imprime_pal_4
+
+        so_imprime_pal_4:
+        ;posiciona_cursor (21,5):
+        mov     dh,21
+        mov     dl,5
+        mov     bh,0
+        mov     ah,2
+        int     10h
+
+        mov ah,9                  ;nessa funçao vai imprimir na tela
+        mov cx,pal_4
+        mov bl,30H
+        mov al,'4'                ;esse caractere pal_1 vezes
+        mov bh,0
+        int 10H
+
+;agora imprime pal_5
+        cmp pal_5, 75
+        jle so_imprime_pal_5
+
+        mov pal_5, 74
+
+        ;posiciona_cursor (22,79):
+        mov     dh,22
+        mov     dl,79
+        mov     bh,0
+        mov     ah,2
+        int     10h
+        ;escreve_mensagem
+        lea    dx, string_mais
+        mov    ah,9
+        int    21h
+
+        jmp so_imprime_pal_5
+
+        so_imprime_pal_5:
+        ;posiciona_cursor (22,5):
+        mov     dh,22
+        mov     dl,5
+        mov     bh,0
+        mov     ah,2
+        int     10h
+
+        mov ah,9                  ;nessa funçao vai imprimir na tela
+        mov cx,pal_5
+        mov bl,30H
+        mov al,'5'                ;esse caractere pal_1 vezes
+        mov bh,0
+        int 10H
+
+;agora imprime pal_6
+        cmp pal_6, 75
+        jle so_imprime_pal_6
+
+        mov pal_6, 74
+
+        ;posiciona_cursor (23,79):
+        mov     dh,23
+        mov     dl,79
+        mov     bh,0
+        mov     ah,2
+        int     10h
+        ;escreve_mensagem
+        lea    dx, string_mais
+        mov    ah,9
+        int    21h
+
+        jmp so_imprime_pal_6
+
+        so_imprime_pal_6:
+        ;posiciona_cursor (23,5):
+        mov     dh,23
+        mov     dl,5
+        mov     bh,0
+        mov     ah,2
+        int     10h
+
+        mov ah,9                  ;nessa funçao vai imprimir na tela
+        mov cx,pal_6
+        mov bl,30H
+        mov al,'6'                ;esse caractere pal_1 vezes
+        mov bh,0
+        int 10H
+
+;agora imprime pal_7
+        cmp pal_7, 75
+        jle so_imprime_pal_7
+
+        mov pal_7, 74
+
+        ;posiciona_cursor (24,79):
+        mov     dh,24
+        mov     dl,79
+        mov     bh,0
+        mov     ah,2
+        int     10h
+        ;escreve_mensagem
+        lea    dx, string_mais
+        mov    ah,9
+        int    21h
+
+        jmp so_imprime_pal_7
+
+    so_imprime_pal_7:
+        ;posiciona_cursor (24,5):
+        mov     dh,24
+        mov     dl,5
+        mov     bh,0
+        mov     ah,2
+        int     10h
+
+        mov ah,9                  ;nessa funçao vai imprimir na tela
+        mov cx,pal_7
+        mov bl,30H
+        mov al,'+'                ;esse caractere pal_1 vezes
+        mov bh,0
+        int 10H
+
+
 espera_enter:
         mov ah,8	                          ; le caractere sem eco
         int 21h
@@ -437,6 +757,7 @@ espera_resposta:
         cmp al,'n'
         je  fim_total
         jmp espera_resposta
+
 fim_total:
         jmp fim_total_e_sem_volta
 
@@ -468,6 +789,12 @@ verificar_outro_arquivo:
         mov analise_espacos+2,' '
         mov analise_espacos+3,' '
         mov analise_espacos+4,' '
+
+        mov analise_digitos,' '
+        mov analise_digitos+1,' '
+        mov analise_digitos+2,' '
+        mov analise_digitos+3,' '
+        mov analise_digitos+4,' '
 
         mov analise_maisculas,' '
         mov analise_maisculas+1,' '
