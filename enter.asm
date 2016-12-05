@@ -7,6 +7,15 @@ BS        EQU    08H ; backspace
 ; SEGMENTO DE DADOS DO PROGRAMA
 dados     segment
 
+
+pal_1 db 0
+pal_2 db 0
+pal_3 db 0
+pal_4 db 0
+pal_5 db 0
+pal_6 db 0
+pal_7 db 0
+
 nome_arq   db 64 dup (?)
 buffer     db 128 dup (?)
 espacos    dw 0
@@ -17,6 +26,16 @@ minusculas dw 0
 enters     dw 0
 outros     dw 0
 digitos    dw 0
+
+string_1    db '1','$'
+string_2    db '2','$'
+string_3    db '3','$'
+string_4    db '4','$'
+string_5    db '5','$'
+string_6    db '6','$'
+string_7    db '+','$'
+string_mais db '*','$'
+
 
 msg_pede_nome       db 'Nome do arquivo: ','$'
 msg_erro            db 'Erro! Repita.',CR,LF,'$'
@@ -432,39 +451,49 @@ verificar_outro_arquivo:
         mov outros,0
         mov digitos,0
 
-        std             ; vai preencher mensagem da unidade para o milhar
+        mov analise_palavras,' '
+        mov analise_palavras+1,' '
+        mov analise_palavras+2,' '
+        mov analise_palavras+3,' '
+        mov analise_palavras+4,' '
 
-        mov    ax,palavras
-        lea    di,analise_palavras+3
-        call   edita    ; coloca em ASCII na mensagem
+        mov analise_caracteres,' '
+        mov analise_caracteres+1,' '
+        mov analise_caracteres+2,' '
+        mov analise_caracteres+3,' '
+        mov analise_caracteres+4,' '
 
-        mov    ax,total
-        lea    di,analise_caracteres+4
-        call   edita    ; coloca em ASCII na mensagem
+        mov analise_espacos,' '
+        mov analise_espacos+1,' '
+        mov analise_espacos+2,' '
+        mov analise_espacos+3,' '
+        mov analise_espacos+4,' '
 
-        mov    ax,espacos
-        lea    di,analise_espacos+3
-        call   edita    ; coloca em ASCII na mensagem
+        mov analise_maisculas,' '
+        mov analise_maisculas+1,' '
+        mov analise_maisculas+2,' '
+        mov analise_maisculas+3,' '
+        mov analise_maisculas+4,' '
 
-        mov    ax,maiusculas
-        lea    di,analise_maisculas+3
-        call   edita    ; coloca em ASCII na mensagem
+        mov analise_minusculas,' '
+        mov analise_minusculas+1,' '
+        mov analise_minusculas+2,' '
+        mov analise_minusculas+3,' '
+        mov analise_minusculas+4,' '
 
-        mov    ax,minusculas
-        lea    di,analise_minusculas+3
-        call   edita    ; coloca em ASCII na mensagem
+        mov analise_crlfs,' '
+        mov analise_crlfs+1,' '
+        mov analise_crlfs+2,' '
+        mov analise_crlfs+3,' '
+        mov analise_crlfs+4,' '
 
-        mov    ax,digitos
-        lea    di,analise_digitos+3
-        call   edita    ; coloca em ASCII na mensagem
+        mov analise_outros,' '
+        mov analise_outros+1,' '
+        mov analise_outros+2,' '
+        mov analise_outros+3,' '
+        mov analise_outros+4,' '
 
-        mov    ax,enters
-        lea    di,analise_crlfs+3
-        call   edita    ; coloca em ASCII na mensagem
 
-        mov    ax,outros
-        lea    di,analise_outros+3
-        call   edita    ; coloca em ASCII na mensagem
         jmp limpa_tela
 
 fim_total_e_sem_volta:
