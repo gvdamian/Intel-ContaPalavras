@@ -1,0 +1,12 @@
+*.exe
+*.EXE
+*.dll
+*.DLL
+*.ovl
+*.OVL
+*.lst
+*.LST
+*.obj
+*.OBJ
+*.map
+*.MAP

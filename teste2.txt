@@ -1,0 +1,5 @@
+Este programa le um arquivo de disco com um texto a ser analisado (com um maximo de 960 caracteres, para poder ser exibido em ate 12 linhas de 80 caracteres na tela) e exibe o arquivo lido nesta area, com cores a escolha do programador.
+O programa tambem analisa o conteudo do arquivo e fornece estatisticas: numero total de palavras, caracteres, espacos em branco, letras maiusculas, letras minusculas, digitos, quebras de linha (pares de CR e LF) e outros.
+Finalmente, o programa exibe um histograma mostrando quantas palavras de cada tamanho foram encontradas. Para palavras com 1 a 6 caracteres, a quantidade e' indicada por um digito igual ao tamanho da palavra para cada palavra existente no texto, na barra horizontal correspondente.
+As palavras com 7 ou mais caracteres sao todas contabilizadas na ultima linha do histograma, sendo cada palavra representada por um '+'.
+Se mais de 75, o ultimo caractere na linha do histograma devera ser um '*'.
