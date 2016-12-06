@@ -512,7 +512,7 @@ mostra_historiograma:
         int     10h
 
         mov ah,9                  ;nessa funçao vai imprimir na tela
-        mov cx,10
+        mov cx,pal_1
         mov bl,30H
         mov al,'1'                ;esse caractere pal_1 vezes
         mov bh,0
@@ -771,6 +771,15 @@ verificar_outro_arquivo:
         mov enters,0
         mov outros,0
         mov digitos,0
+
+        mov pal_1,0
+        mov pal_2,0
+        mov pal_3,0
+        mov pal_4,0
+        mov pal_5,0
+        mov pal_6,0
+        mov pal_7,0
+        mov contador,0
 
         mov analise_palavras,' '
         mov analise_palavras+1,' '
